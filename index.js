@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const errorMiddleware = require('./middlewares/errorMiddleware');
+const authMiddleware = require('./middlewares/authMiddleware');
 const userController = require('./controllers/userController');
 const loginController = require('./controllers/loginController');
 
@@ -14,6 +15,8 @@ app.get('/', (request, response) => {
 });
 
 app.post('/user', userController.create);
+app.get('/user', authMiddleware, userController.getAll);
+
 app.post('/login', loginController.login);
 
 app.use(errorMiddleware);

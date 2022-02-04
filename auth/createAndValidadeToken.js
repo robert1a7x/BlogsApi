@@ -11,11 +11,11 @@ const createToken = (payload) => {
 
 const validateToken = (token) => {
   try {
-    const decoded = jwt.sign(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     return decoded;
   } catch (error) {
-    return { errCode: 401, message: error.message };
+    return false;
   }
 };
 

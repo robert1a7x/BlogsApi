@@ -4,6 +4,7 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 const authMiddleware = require('./middlewares/authMiddleware');
 const userController = require('./controllers/userController');
 const loginController = require('./controllers/loginController');
+const categorieController = require('./controllers/categorieController');
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.get('/user', authMiddleware, userController.getAll);
 app.get('/user/:id', authMiddleware, userController.getById);
 
 app.post('/login', loginController.login);
+
+app.post('/categories', authMiddleware, categorieController.create);
 
 app.use(errorMiddleware);
 

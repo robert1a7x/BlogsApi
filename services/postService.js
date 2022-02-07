@@ -23,6 +23,18 @@ const create = async ({ title, content, categoryIds }, token) => {
   return newPost;
 };
 
+const getAll = async () => {
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user' },
+      { model: Categorie, as: 'categories' },
+    ],
+  });
+
+  return posts;
+};
+
 module.exports = {
   create,
+  getAll,
 };

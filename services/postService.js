@@ -35,8 +35,7 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const [post] = await BlogPost.findAll({
-    where: { id },
+  const post = await BlogPost.findByPk(id, {
     include: [
       { model: User, as: 'user' },
       { model: Categorie, as: 'categories' },

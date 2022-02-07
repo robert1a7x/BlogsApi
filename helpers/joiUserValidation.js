@@ -15,7 +15,16 @@ const loginValidation = ({ email, password }) => (
 }).validate({ email, password })
 );
 
+const postValidation = ({ title, content, categoryIds }) => (
+  Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  categoryIds: Joi.array().required(),
+}).validate({ title, content, categoryIds })
+);
+
 module.exports = {
   validateUserData,
   loginValidation,
+  postValidation,
 };

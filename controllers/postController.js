@@ -20,7 +20,7 @@ const getAll = async (_req, res) => {
 const getByPostId = async (req, res, next) => {
   const { id } = req.params;
 
-  const post = await postService.getByPostId({ id });
+  const post = await postService.getByPostId(id);
 
   if (post.errCode) return next(post);
 

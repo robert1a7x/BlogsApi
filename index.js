@@ -27,6 +27,7 @@ app.get('/categories', authMiddleware, categorieController.getAll);
 
 app.post('/post', authMiddleware, postController.create);
 app.get('/post', authMiddleware, postController.getAll);
+app.get('/post/:id', authMiddleware, postController.getById);
 
 app.use(errorMiddleware);
 

@@ -17,10 +17,10 @@ const getAll = async (_req, res) => {
  return res.status(200).json(posts);
 };
 
-const getById = async (req, res, next) => {
+const getByPostId = async (req, res, next) => {
   const { id } = req.params;
 
-  const post = await postService.getById(+id);
+  const post = await postService.getByPostId({ id });
 
   if (post.errCode) return next(post);
 
@@ -30,5 +30,5 @@ const getById = async (req, res, next) => {
 module.exports = {
   create,
   getAll,
-  getById,
+  getByPostId,
 };

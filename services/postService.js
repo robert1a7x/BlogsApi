@@ -34,7 +34,7 @@ const getAll = async () => {
   return posts;
 };
 
-const getById = async (id) => {
+const getByPostId = async ({ id }) => {
   const post = await BlogPost.findByPk(id, {
     include: [
       { model: User, as: 'user' },
@@ -50,5 +50,5 @@ const getById = async (id) => {
 module.exports = {
   create,
   getAll,
-  getById,
+  getByPostId,
 };

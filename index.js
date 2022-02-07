@@ -22,6 +22,7 @@ app.get('/user/:id', authMiddleware, userController.getById);
 app.post('/login', loginController.login);
 
 app.post('/categories', authMiddleware, categorieController.create);
+app.get('/categories', authMiddleware, categorieController.getAll);
 
 app.use(errorMiddleware);
 

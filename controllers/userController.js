@@ -13,7 +13,7 @@ const create = async (req, res, next) => {
 const getAll = async (_req, res) => {
   const users = await userService.getAll();
 
-  res.status(200).json(users);
+  return res.status(200).json(users);
 };
 
 const getById = async (req, res, next) => {

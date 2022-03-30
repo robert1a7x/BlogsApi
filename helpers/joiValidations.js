@@ -23,8 +23,16 @@ const postValidation = ({ title, content, categoryIds }) => (
 }).validate({ title, content, categoryIds })
 );
 
+const updateValidation = ({ title, content }) => (
+  Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+}).validate({ title, content })
+);
+
 module.exports = {
   validateUserData,
   loginValidation,
   postValidation,
+  updateValidation,
 };

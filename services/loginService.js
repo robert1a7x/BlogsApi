@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { loginValidation } = require('../helpers/joiUserValidation');
+const { loginValidation } = require('../helpers/joiValidations');
 const { createToken } = require('../auth/createAndValidadeToken');
 
 const login = async ({ email, password }) => {
@@ -13,7 +13,7 @@ const login = async ({ email, password }) => {
     return { errCode: 400, message: 'Invalid fields' };
   }
 
-  const token = createToken({ email, password });
+  const token = createToken({ email, password, userId: userExist[0].id });
 
   return token;
 };

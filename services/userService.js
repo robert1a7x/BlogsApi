@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { validateUserData } = require('../helpers/joiUserValidation');
+const { validateUserData } = require('../helpers/joiValidations');
 const { createToken } = require('../auth/createAndValidadeToken');
 
 const create = async ({ displayName, email, password, image }) => {

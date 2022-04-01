@@ -29,6 +29,7 @@ app.post('/post', authMiddleware, postController.create);
 app.get('/post', authMiddleware, postController.getAll);
 app.get('/post/:id', authMiddleware, postController.getByPostId);
 app.put('/post/:id', authMiddleware, postController.update);
+app.delete('/post/:id', authMiddleware, postController.remove);
 
 app.use(errorMiddleware);
 

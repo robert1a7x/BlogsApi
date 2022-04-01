@@ -74,9 +74,24 @@ const update = async ({ title, content, categoryIds }, id, token) => {
   return updatedPost;
 };
 
+const remove = async (id, token) => {
+  const { userId } = validateToken(token);
+
+  const post = await getByPostId(id);
+
+  if (post.errCode) return { errCode: 404, message: 'Post does not exist' };
+
+  if (userId !== post.id) return { errCode: 401, message: 'Unauthorized user' };
+
+  await BlogPost.destroy({ where: { id } });
+
+  return true;
+};
+
 module.exports = {
   create,
   getAll,
   getByPostId,
   update,
+  remove,
 };

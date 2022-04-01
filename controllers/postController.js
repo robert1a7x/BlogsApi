@@ -38,9 +38,21 @@ const update = async (req, res, next) => {
   return res.status(200).json(updatedPost);
 };
 
+const remove = async (req, res, next) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+
+  const postRemoved = await postService.remove(+id, token);
+
+  if (postRemoved.errCode) return next(postRemoved);
+
+  res.status(204).send();
+};
+
 module.exports = {
   create,
   getAll,
   getByPostId,
   update,
+  remove,
 };

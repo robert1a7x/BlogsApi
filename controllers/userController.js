@@ -26,8 +26,19 @@ const getById = async (req, res, next) => {
   return res.status(200).json(user);
 };
 
+const remove = async (req, res, next) => {
+  const token = req.headers.authorization;
+
+  const userRemoved = await userService.remove(token);
+
+  if (userRemoved.errCode) return next(userRemoved);
+
+  return res.status(204).send();
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
 };

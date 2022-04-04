@@ -1,6 +1,6 @@
 const { User } = require('../models');
 const { validateUserData } = require('../helpers/joiValidations');
-const { createToken } = require('../auth/createAndValidadeToken');
+const { createToken, validateToken } = require('../auth/createAndValidadeToken');
 
 const create = async ({ displayName, email, password, image }) => {
   const { error } = await validateUserData({ displayName, email, password });
@@ -32,8 +32,19 @@ const getById = async (id) => {
   return user;
 };
 
+const remove = async (token) => {
+  const { email } = validateToken(token);
+
+  const removedUser = await User.destroy({ where: { email } });
+
+  if (removedUser === 0) return { errCode: 404, message: 'User Already removed' };
+  
+  return true;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
 };

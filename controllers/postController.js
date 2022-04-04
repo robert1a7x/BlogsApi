@@ -46,7 +46,7 @@ const remove = async (req, res, next) => {
 
   if (postRemoved.errCode) return next(postRemoved);
 
-  res.status(204).send();
+  return res.status(204).send();
 };
 
 module.exports = {

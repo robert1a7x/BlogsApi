@@ -17,6 +17,14 @@ const getAll = async (_req, res) => {
  return res.status(200).json(posts);
 };
 
+const getByQuery = async (req, res) => {
+  const { q } = req.query;
+
+  const posts = await postService.getByQuery(q);
+
+  return res.status(200).json(posts);
+};
+
 const getByPostId = async (req, res, next) => {
   const { id } = req.params;
 
@@ -55,4 +63,5 @@ module.exports = {
   getByPostId,
   update,
   remove,
+  getByQuery,
 };

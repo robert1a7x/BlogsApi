@@ -26,6 +26,7 @@ app.post('/login', loginController.login);
 app.post('/categories', authMiddleware, categorieController.create);
 app.get('/categories', authMiddleware, categorieController.getAll);
 
+app.get('/post/search', authMiddleware, postController.getByQuery);
 app.post('/post', authMiddleware, postController.create);
 app.get('/post', authMiddleware, postController.getAll);
 app.get('/post/:id', authMiddleware, postController.getByPostId);

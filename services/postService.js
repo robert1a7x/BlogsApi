@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { BlogPost, Categorie, User } = require('../models');
 const { postValidation, updateValidation } = require('../helpers/joiValidations');
 const { validateToken } = require('../auth/createAndValidadeToken');
@@ -25,6 +26,24 @@ const create = async ({ title, content, categoryIds }, token) => {
 
 const getAll = async () => {
   const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user' },
+      { model: Categorie, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  return posts;
+};
+
+const getByQuery = async (q) => {
+  // Source: https://stackoverflow.com/questions/31258158/how-to-implement-search-feature-using-sequelizejs
+  const posts = await BlogPost.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${q}%` } },
+        { content: { [Op.like]: `%${q}%` } },
+      ],
+    },
     include: [
       { model: User, as: 'user' },
       { model: Categorie, as: 'categories', through: { attributes: [] } },
@@ -94,4 +113,5 @@ module.exports = {
   getByPostId,
   update,
   remove,
+  getByQuery,
 };

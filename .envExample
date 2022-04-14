@@ -1,0 +1,5 @@
+MYSQL_USER=mysql_user
+MYSQL_PASSWORD=mysql_pass
+HOSTNAME=localhost
+PORT=0000
+JWT_SECRET=secret

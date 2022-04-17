@@ -11,11 +11,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (request, response) => {
-  response.send();
-});
-
 app.post('/user', userController.create);
 app.get('/user', authMiddleware, userController.getAll);
 app.get('/user/:id', authMiddleware, userController.getById);

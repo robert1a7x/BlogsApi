@@ -4,7 +4,7 @@ const { create, getAll, getById, remove } = require('../../services/userService'
 const { User } = require('../../models');
 const { userMock, createUserMock } = require('../services/mocks');
 
-describe('Testes da rota de categorias', () => {
+describe('Testes da rota de USERS', () => {
   describe('Método getAll()', () => {
     before(() => {
       Sinon.stub(User, 'findAll').resolves(userMock);
@@ -130,7 +130,7 @@ describe('Testes da rota de categorias', () => {
 			});
 	
 			it('deve retornar um objeto de erro, com o erro 404 e a mensagem "User Already removed"', async() => {
-				const user = await remove('111');
+				const user = await remove('token');
 	
 				expect(user).to.have.property('errCode');
 				expect(user.errCode).to.be.eq(404);

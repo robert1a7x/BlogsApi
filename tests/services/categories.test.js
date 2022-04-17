@@ -4,7 +4,7 @@ const { create, getAll } = require('../../services/categorieService');
 const { Categorie } = require('../../models');
 const { categoriesMock } = require('../services/mocks');
 
-describe('Testes da rota de categorias', () => {
+describe('Testes da rota CATEGORIES', () => {
   describe('Método getAll()', () => {
     before(() => {
       Sinon.stub(Categorie, 'findAll').resolves(categoriesMock);

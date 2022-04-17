@@ -4,7 +4,7 @@ const { login } = require('../../services/loginService');
 const { User } = require('../../models');
 const { userMock } = require('../services/mocks');
 
-describe('Testes do login', () => {
+describe('Testes da rota LOGIN', () => {
   describe('Método login()', () => {
 		describe('Quando o login é feito com sucesso', () => {
 			const loginData = {

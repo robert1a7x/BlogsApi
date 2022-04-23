@@ -1,4 +1,4 @@
-# Store Manager
+# Blogs Api
 
 # Sumário
 
@@ -8,16 +8,19 @@
 - [Executando a aplicação](#executando-aplicação)
 - [Testes](#testes)
 - [Rotas](#testes)
-	- [POST `/products`](#post-products)
-	- [GET `/products`](#get-products)
-	- [GET `/products/:id`](#get-products-id)
-	- [PUT  `/products/:id`](#put-products-id)
-	- [DELETE `/products/:id`](#delete-products)
-	- [POST `/sales`](#post-sales)
-	- [GET `/sales`](#get-sales)
-	- [GET `/sales/:id`](#get-sales-id)
-	- [PUT  `/sales/:id`](#put-sales)
-	- [DELETE `/sales/:id`](#delete-sales)
+	- [POST `/user`](#post-user)
+	- [POST `/login`](#post-login)
+	- [GET `/user`](#get-user)
+	- [GET `/user/:id`](#get-user-id)
+	- [DELETE `/user/me`](#delete-user-me)
+	- [POST `/categories`](#post-categories)
+	- [GET `/categories`](#get-categories)
+	- [POST `/post`](#post-post)
+	- [GET `/post/`](#get-post)
+	- [GET`/post/:id`](#get-post-id)
+	- [PUT`/post/:id`](#put-post-id)
+	- [DELETE `/post/:id`](#delete-post-id)
+	- [GET `post/search?q=:searchTerm`](#get-postsearchqsearchterm)
 
 # Contexto
 
@@ -38,7 +41,7 @@ Instale as dependências do projeto:
 npm install
 ```
 
-Para que o projeto funcione corretamente será necessário criar um arquivo do tipo `.env` com as variáveis de ambiente referentes ao banco de dados, portas a serem utilizadas e o seu segredo para utilizar o `JWT`. Por exemplo, caso o seu usuário SQL seja `nome` e a senha `1234` seu arquivo `.env` ficará desta forma:
+Para que o projeto funcione corretamente será necessário criar um arquivo do tipo `.env` com as variáveis de ambiente referentes ao banco de dados, portas a serem utilizadas e o seu segredo para utilizar o [JWT](https://jwt.io/introduction). Por exemplo, caso o seu usuário SQL seja `nome` e a senha `1234` seu arquivo `.env` ficará desta forma:
 
 ```sh
 MYSQL_USER=nome
@@ -55,7 +58,7 @@ npm run prestart
 ```
 Este comendo vai automaticamente criar o bando de dados da API e criar todas as tabelas.
 
-Caso queira automaticamente incluir alguns dados para teste nas tabelas, basta rodar o seguinte comendo: 
+Caso queira automaticamente incluir alguns dados para teste nas tabelas, basta rodar o seguinte comando: 
 
 ```bash
 npm run seed
@@ -162,245 +165,456 @@ Quando os dados de login estão incorretos:
 - Atributos `email` e `password` não podem estar vazios ou faltando.
 ---
 
-###  GET `/products`
-Rota responsável por listar todos os produtos cadastrados na tabela `products`.
+###  GET `/user`
+Rota responsável por listar todos os usuários cadastrados na tabela `users`. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-user.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
 
 Exemplo de retorno com sucesso:
 ```json
- [
-    {
+[
+  {
+    "id": 1,
+    "displayName": "nome",
+	"email": "email@email.com",
+	"password": "123456",
+	"image": "http://image/image.png"
+  }
+]
+```
+---
+
+
+###  GET `/user/:id`
+Rota responsável por listar um único usuário cadastrado na tabela `users`. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-userid.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+Exemplo de retorno com sucesso:
+```json
+ {
+	"id": 1,
+    "displayName": "nome",
+	"email": "email@email.com",
+	"password": "123456",
+	"image": "http://image/image.png"
+ }
+```
+Quando o usuário com o id informado não existe:
+```json
+{
+   "message": "User does not exist"
+}
+```
+
+---
+###  DELETE `/user/me`
+Rota responsável por deletar o usuário logado. Para realizar a remoção do usuário será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-userdelete.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+
+Quando o usuário é removido com sucesso, é retornado o status `204` sem nenhum conteúdo:
+```sh
+no body returned for response
+```
+---
+
+###  POST `/categories`
+Rota responsável por cadastrar uma nova categoria na tabela `categories`. Para realizar o cadastro será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-categories.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+Além disso, o `body` da requisição deve ter o seguinte formato:
+
+```json
+ {
+   "name": "Tecnologia"
+ }
+```
+ 
+Exemplo de retorno com sucesso:
+```json
+ {
+	"id": 1,
+    "name": "Tecnologia"
+ }
+```
+#### Regras:
+-  Atributo `name` não pode estar vazio ou faltando.
+
+---
+###  GET `/categories`
+Rota responsável por listar as categorias cadastradas na tabela `categories`. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-categoriesget.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+
+Exemplo de retorno com sucesso:
+```json
+[
+  {
+    "id": 1,
+    "name": "Escola"
+  },
+  {
+    "id": 2,
+    "name": "Inovação"
+  }
+]
+```
+---
+
+###  POST `/post`
+Rota responsável por cadastrar um novo post do blog na tabela `blogposts`. Para realizar o cadastro será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-postpost.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+Além disso, o `body` da requisição deve ter o seguinte formato:
+
+```json
+{
+  "title": "New post",
+  "content": "Information about the new post",
+  "categoryIds": [1, 2]
+}
+```
+ 
+Exemplo de retorno com sucesso, o post é vinculado ao id do usuário que está logado:
+```json
+{
+  "id": 3,
+  "userId": 1,
+  "title": "New post",
+  "content": "Information about the new post",
+  "categoryIds": [1, 2]
+}
+```
+Quando o id da categoria informada não existe:
+```json
+{
+   "message": "categoryIds not found"
+}
+```
+
+#### Regras:
+- Atributos `title`, `content` e `categoryIds` não podem estar vazios ou faltando.
+
+---
+###  GET `/post`
+Rota responsável por listar todos os posts cadastrados na tabela `blogposts`. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-postget.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+
+Exemplo de retorno com sucesso:
+```json
+[
+  {
+    "id": 1,
+    "title": "Post",
+    "content": "Post content",
+    "userId": 1,
+    "published": "2011-08-01T19:58:00.000Z",
+    "updated": "2011-08-01T19:58:51.000Z",
+    "user": {
       "id": 1,
-      "name": "produto A",
-      "quantity": 10
+      "displayName": "User",
+      "email": "email@email.com",
+      "image": "https://image/image.jpg"
     },
-    {
-      "id": 2,
-      "name": "produto B",
-      "quantity": 20
-    }
-  ]
-```
----
-
-###  GET `/products/:id`
-Rota responsável por listar o produto especificado pelo `id` passado na rota.
-
-Exemplo de retorno com sucesso:
-```json
-  {
-    "id": 1,
-    "name": "produto A",
-    "quantity": 10
-  }
-```
-Quando o `id` do produto não é encontrado:
-```json
-  { "message": "Product not found" }
-```
----
-
-###  PUT  `/products/:id`
-Rota responsável por atualizar os dados de um produto específico na tabela `products`. O `id` do produto deve ser passado na rota, e o `body` da requisição deve ter o seguinte formato:
-
-```json
-{
-  "name": "new_product_name",
-  "quantity": 20
-}
-```
-Exemplo de retorno com sucesso:
-```json
-{
-  "id": 1
-  "name": "new_product_name",
-  "quantity": 20
-}
-```
-Quando o `id` do produto não é encontrado:
-```json
-  { "message": "Product not found" }
-```
-
-#### Regras:
-- Atributos `name` e `quantity` não podem estar vazios;
-- Atributo `name` não pode ter menos de 5 caracteres;
-- Atributo `quantity` deve ser igual ou maior que `1`.
----
-
-###  DELETE `/products/:id`
-Rota responsável por remover um produto da tabela `products` com base no `id` passado na requisição.
-
-Exemplo de retorno com sucesso:
-```json
-   {
-    "id": 1,
-    "name": "produto A",
-    "quantity": 10
-  }
-```
-Quando o `id` do produto a ser deletado não é encontrado:
-```json
-  { "message": "Product not found" }
-```
----
-
-###  POST `/sales`
-Rota responsável por cadastrar novos produtos na tabela `sales`. o `body` da requisição deve ter o seguinte formato:
-
-```json
-[
-  {
-    "product_id": 1,
-    "quantity": 5,
+    "categories": [
+      {
+        "id": 1,
+        "name": "Tecnologia"
+      }
+    ]
   }
 ]
 ```
+---
+###  GET `/post/:id`
+Rota responsável por listar um único post cadastrado na tabela `blogposts`. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-postgetid.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
 Exemplo de retorno com sucesso:
 ```json
-  {
-    "id": 1,
-    "itemsSold": [
-      {
-        "product_id": 1,
-        "quantity": 5
-      }
-    ]
-  }
+{
+   "id": 1,
+   "title": "Post",
+   "content": "Post content",
+   "userId": 1,
+   "published": "2011-08-01T19:58:00.000Z",
+   "updated": "2011-08-01T19:58:51.000Z",
+   "user": {
+     "id": 1,
+     "displayName": "User",
+     "email": "email@email.com",
+     "image": "https://image/image.jpg"
+   },
+   "categories": [
+     {
+       "id": 1,
+       "name": "Tecnologia"
+     }
+   ]
+}
+```
+Quando o post com o id informado não existe:
+```json
+{
+   "message": "Post does not exist"
+}
+```
+---
+###  PUT `/post/:id`
+Rota responsável por atualizar os dados de um post cadastrado na tabela `blogposts` com base no id. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
+
+![exemplo headers token](./public/token-postput.png)
+
+Quando o token não é informado na requisição:
+```json
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+
+Exemplo de retorno com sucesso:
+```json
+{
+   "title": "Update Post",
+   "content": "Updated content",
+   "userId": 1,
+   "categories": [
+     {
+       "id": 1,
+       "name": "Tecnologia"
+     }
+   ]
+}
 ```
 
-Também é possível cadastrar múltiplas vendas com uma requisição, exemplo com a venda de dois produtos:
+Quando o usuário que está tentando atualizar o post não é o criador do post:
 ```json
-   [
-    {
-      "product_id": 1,
-      "quantity": 2
-    },
-    {
-      "product_id": 2,
-      "quantity": 5
-    }
-  ]
+{
+   "message": "Unauthorized user"
+}
 ```
-Retorno do banco após o cadastro da venda de dois produtos:
+
+Não será possível atualizar o conteúdo do post quando informado o atributo `categoryIds` na requisição, caso o atributo seja enviado, será retornado o seguinte erro:
 ```json
-  {
-    "id": 1,
-    "itemsSold": [
-      {
-        "product_id": 1,
-        "quantity": 2
-      },
-      {
-        "product_id": 2,
-        "quantity": 5
-      }
-    ]
-  }
+{
+   "message": "Categories cannot be edited"
+}
+```
+Quando o post com o id informado não existe:
+```json
+{
+   "message": "Post does not exist"
+}
 ```
 
 #### Regras:
-- Atributos `product_id` e `quantity` não podem estar vazios;
-- Atributo `quantity` deve ser igual ou maior que `1`.
+- Atributos `title` e `content`  não podem estar vazios ou faltando.
 ---
 
-###  GET `/sales`
-Rota responsável por listar todas as vendas cadastradas na tabela `sales`.
+###  DELETE `/post/:id`
+Rota responsável por deletar um post cadastrado na tabela `blogposts` com base no id. Para realizar a remoção do post será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
 
-Exemplo de retorno com sucesso:
+![exemplo headers token](./public/token-postdelete.png)
+
+Quando o token não é informado na requisição:
 ```json
- [
-    {
-      "saleId": 1,
-      "date": "2021-09-09T04:54:29.000Z",
-      "product_id": 1,
-      "quantity": 2
-    },
-    {
-      "saleId": 2,
-      "date": "2021-09-09T04:54:54.000Z",
-      "product_id": 2,
-      "quantity": 2
-    }
-  ]
+{
+   "message": "Token not found"
+}
+```
+Quando o token é inválido:
+```json
+{
+   "message": "Expired or invalid token"
+}
+```
+___
+
+Quando o post é removido com sucesso, é retornado o status `204` sem nenhum conteúdo:
+```sh
+no body returned for response
+```
+
+Quando o usuário que está tentando remover o post não é o criador do post:
+```json
+{
+   "message": "Unauthorized user"
+}
+```
+
+Quando o post com o id informado não existe:
+```json
+{
+   "message": "Post does not exist"
+}
 ```
 ---
+###  GET `post/search?q=:searchTerm`
+Rota responsável por listar todos os posts cadastrados na tabela `blogposts` com base em um termo de pesquisa, sendo possível procurar pelo titulo ou pelo conteúdo do post. Para realizar a listagem será necessário possuir um token, que é gerado ao realizar o cadastro ou o login do usuário, e incluí-lo nos `headers` da requisição com a chave `authorization`.
 
-###  GET   `/sales/:id`
-Rota responsável por listar uma venda especificada pelo `id` passado na rota.
+![exemplo headers token](./public/token-postget.png)
 
-Exemplo de retorno de uma venda com múltiplos produtos:
+Quando o token não é informado na requisição:
 ```json
-   [
-    { 
-      "date": "2021-09-09T04:54:29.000Z",
-      "product_id": 1,
-      "quantity": 2
-    },
-    {
-      "date": "2021-09-09T04:54:54.000Z",
-      "product_id": 2,
-      "quantity": 2
-    }
-  ]
+{
+   "message": "Token not found"
+}
 ```
-Quando o `id` da venda não é encontrado:
+Quando o token é inválido:
 ```json
-  { "message": "Sale not found" }
+{
+   "message": "Expired or invalid token"
+}
 ```
----
+___
 
-###  PUT  `/sales/:id`
-Rota responsável por atualizar os dados de uma venda específica na tabela `sales`. O `id` da venda deve ser passada na rota, e o `body` da requisição deve ter o seguinte formato:
-
+Exemplo de retorno com sucesso, procurando pelo titulo do Post. `post/search?q=Post`:
 ```json
 [
   {
-    "product_id": 3,
-    "quantity": 30
-  }
-]
-```
-Exemplo de retorno com sucesso:
-```json
-  {
-    "saleId": 1,
-    "itemUpdated": [
+    "id": 1,
+    "title": "Post",
+    "content": "Post content",
+    "userId": 1,
+    "published": "2011-08-01T19:58:00.000Z",
+    "updated": "2011-08-01T19:58:51.000Z",
+    "user": {
+      "id": 1,
+      "displayName": "User",
+      "email": "email@email.com",
+      "image": "https://image/image.jpg"
+    },
+    "categories": [
       {
-        "product_id": 3,
-        "quantity": 30
+        "id": 1,
+        "name": "Tecnologia"
       }
     ]
   }
-```
-Quando o `id` da venda não é encontrado:
-```json
-  { "message": "Sale not found" }
+]
 ```
 
 #### Regras:
-- Atributos `product_id` e `quantity` não podem estar vazios;
-- Atributo `quantity` deve ser igual ou maior que `1`.
+- Quando não é informado nada na pesquisa são retornados todos os posts.
+- Quando se busca um post inexistente é retornado um array vazio `[]`
 ---
-
-###  POST `/user/`
-Rota responsável por cadastrar um usuário no blog, direto na tabela `users`.
-
-Exemplo de retorno com sucesso:
-```json
-  [
-    { 
-      "date": "2021-09-09T04:54:29.000Z",
-      "product_id": 1,
-      "quantity": 2
-    },
-    {
-      "date": "2021-09-09T04:54:54.000Z",
-      "product_id": 2,
-      "quantity": 2
-    }
-  ]
-```
-Quando o `id` da venda a ser deletada não é encontrado:
-```json
-  { "message": "Sale not found" }
-```

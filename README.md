@@ -617,4 +617,3 @@ Exemplo de retorno com sucesso, procurando pelo titulo do Post. `post/search?q=P
 #### Regras:
 - Quando não é informado nada na pesquisa são retornados todos os posts.
 - Quando se busca um post inexistente é retornado um array vazio `[]`
----

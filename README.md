@@ -27,12 +27,12 @@
 Neste projeto foi desenvolvida uma `API RESTful` utilizando a arquitetura MSC, em conjunto com o `ORM` `Sequelize`.
 
 A API trata-se de um sistema de gerenciamento de um Blog, onde é possível, utilizando o `CRUD`, gerenciar posts, usuários e categorias. Também possui rotas de cadastro e login, feitas utilizando a biblioteca `JSON Web Token` para gerenciar o login e atividades dos usuários no Blog.
-  
+___
 
 ## Tecnologias usadas
 
 > Desenvolvido usando: Javascript, Express, Node.js, Sequelize, JWT, Joi, ESlint, Mysql, Mocha, Chai, Sinon
-
+___
 ## Configuração inicial
 
 Instale as dependências do projeto: 
@@ -93,14 +93,14 @@ Para executar em modo de desenvolvimento, com a ferramenta `Nodemon`, onde a cad
 ```bash
 npm run debug
 ```
-
+___
 ## Testes
 
   A API possui até o momento somente testes unitários para a camada `Service`,  para rodar os testes basta executar o comando abaixo:
 ```bash
 npm test
 ```
-
+___
 ## Rotas
 
 ###  POST `/user`

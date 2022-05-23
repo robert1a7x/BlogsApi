@@ -65,7 +65,7 @@ npm run seed
 ```
 
 ---
-O banco terá as tabelas: `users`, `categories` e `blogposts` e `postscategories`.
+O banco tem as seguintes tabelas: `users`, `categories` e `blogposts` e `postscategories`.
 
 A tabela `users` tem o seguinte formato:
 
